@@ -28,6 +28,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -222,8 +223,29 @@ public class ListController {
 	   private void removeButtonAction(ActionEvent event) {
 		   AllGridsHidden();
 		   if(listView.getSelectionModel().getSelectedItem() != null){
-		   obsList.remove(listView.getSelectionModel().getSelectedIndex());
-		   listView.getSelectionModel().select(0);}
+		   Alert alert = new Alert(AlertType.CONFIRMATION);
+		   alert.setContentText("You are about to delete:\n" + listView.getSelectionModel().getSelectedItem().Title + " by " + listView.getSelectionModel().getSelectedItem().Artist +"\nAre you sure?");
+		   alert.showAndWait().ifPresent(response -> {
+			     if (response == ButtonType.OK) {
+						  
+						 int index = listView.getSelectionModel().getSelectedIndex();
+						 int newindex = 0;
+						 if(obsList.size() > index){
+							 newindex = index;
+						 }
+						 else if(obsList.size() == index){
+							 newindex = index-1;
+						 }
+						 else if(obsList.size() < index){
+							 newindex = -1;
+						 }
+						  obsList.remove(listView.getSelectionModel().getSelectedIndex());
+						  listView.getSelectionModel().select(newindex);
+					   
+			     }
+			 });
+		   	   
+		   }
 	   }
 	   
 	   //END EVENT HANDLERS 
@@ -310,8 +332,8 @@ public class ListController {
 		   
 		   
 		   for(Song i : obsList){
-			   if(i == listView.getSelectionModel().getSelectedItem()){
-			   if(i.Title.equals(Title) && i.Artist.equals(Artist) && i.Album.equals(Album) && i.Year.equals(Year)){
+			   if(i != listView.getSelectionModel().getSelectedItem()){
+			   if(i.Title.equalsIgnoreCase(Title) && i.Artist.equalsIgnoreCase(Artist)){
 				   senderror();
 				   return;
 			   }}
@@ -321,7 +343,7 @@ public class ListController {
 		   if(song != null && !obsList.contains(song)){
 		   if (Title != null && !Title.trim().isEmpty()){item.setTitle(song.Title); }
 		   if (Artist != null && !Artist.trim().isEmpty()){item.setArtist(song.Artist);}
-		   if (Album != null){item.setArtist(song.Album);}
+		   if (Album != null){item.setAlbum(song.Album);}
 		   if (Year != null){item.setYear(song.Year);}
 		   }
 		   else{
@@ -342,7 +364,7 @@ public class ListController {
 
 		   sortList();
 
-		   listView.getSelectionModel().select(song);
+		   listView.getSelectionModel().select(item);
 	   }
 	   //END EDIT ITEM
 	   
