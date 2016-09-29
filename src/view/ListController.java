@@ -41,8 +41,6 @@ public class ListController {
 	
 	Stage mainStage;
 	
-	//TESTING
-	//THIS IS A TEST
 	
 	//FXML REFERENCES
 	   @FXML     
